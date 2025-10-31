@@ -1,0 +1,75 @@
+/* Full-page container */
+.home-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Overlay to darken background for better contrast */
+.home-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: rgba(27, 25, 25, 0.7);
+  padding: 40px 50px;
+  border-radius: 15px;
+  color: white;
+}
+
+/* Styling for heading */
+.home-overlay h1 {
+  color: #ffffff;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 2.5rem;
+}
+
+/* Styling for button groups */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Styling for buttons */
+.home-button {
+  display: inline-block;
+  background-color: #00bcd4;
+  color: white;
+  width: 150px;
+  height: 50px;
+  line-height: 50px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 15px 30px;
+  border-radius: 10px;
+  transition: 0.3s;
+  cursor: pointer;
+  border: none;
+}
+
+.home-button:hover {
+  background-color: #0097a7;
+  transform: scale(1.05);
+}
+
+.exit-button {
+  background-color: #a50b62;
+}
+
+.exit-button:hover {
+  background-color: #8d0a56;
+}

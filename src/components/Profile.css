@@ -1,0 +1,32 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
+}
+
+.profile-container h1 {
+  margin-bottom: 20px;
+}
+
+.profile-container p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.profile-container button {
+  padding: 10px 20px;
+  background-color: #00bcd4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.profile-container button:hover {
+  background-color: #0097a7;
+}

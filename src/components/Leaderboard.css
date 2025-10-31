@@ -1,0 +1,85 @@
+.leaderboard-page {
+  min-height: 100vh;
+  background: #1e3c72;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.leaderboard-card {
+  background: white;
+  padding: 30px;
+  border-radius: 25px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.title {
+  background: #e91e63;
+  color: white;
+  margin: -30px -30px 25px -30px;
+  padding: 15px;
+  border-radius: 25px 25px 0 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.leaderboard-table th {
+  background: #f8bbd0;
+  color: #880e4f;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.leaderboard-table td {
+  padding: 12px;
+  font-size: 1.1rem;
+}
+
+.leaderboard-table tbody tr:nth-child(odd) {
+  background: #fce4ec;
+}
+
+.leaderboard-table tbody tr:nth-child(even) {
+  background: white;
+}
+
+.leaderboard-table tbody tr:hover {
+  background: #f48fb1;
+  transition: 0.2s;
+}
+
+.back-btn {
+  margin-top: 20px;
+  padding: 12px 30px;
+  background: #00bcd4;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: #0097a7;
+  transform: scale(1.05);
+}
+
+.loading {
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
+}
