@@ -1,4 +1,3 @@
-// src/components/Cover.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Cover.css';

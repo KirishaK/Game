@@ -1,75 +1,83 @@
-/* Full-page container */
+/* src/components/Home.css */
 .home-container {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  background-size: cover;
+  background-position: center;
 }
 
-/* Overlay to darken background for better contrast */
 .home-overlay {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  background-color: rgba(27, 25, 25, 0.7);
-  padding: 40px 50px;
-  border-radius: 15px;
+  gap: 30px;
+  background: rgba(15, 12, 41, 0.85);
+  padding: 50px 60px;
+  border-radius: 20px;
   color: white;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
 }
 
-/* Styling for heading */
 .home-overlay h1 {
-  color: #ffffff;
-  margin-bottom: 30px;
+  color: #00d4ff;
+  margin-bottom: 10px;
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 3rem;
+  font-weight: bold;
+  text-shadow: 0 0 15px #00d4ff, 0 0 30px #00aaff;
+  letter-spacing: 2px;
 }
 
-/* Styling for button groups */
 .button-group {
   display: flex;
   justify-content: center;
-  gap: 30px;
-  margin-bottom: 20px;
+  gap: 40px;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 18px;
   align-items: center;
 }
 
-/* Styling for buttons */
 .home-button {
   display: inline-block;
-  background-color: #00bcd4;
+  background: linear-gradient(45deg, #00bcd4, #0097a7);
   color: white;
-  width: 150px;
-  height: 50px;
-  line-height: 50px;
+  width: 180px;
+  height: 55px;
+  line-height: 55px;
   text-decoration: none;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
-  padding: 15px 30px;
-  border-radius: 10px;
-  transition: 0.3s;
+  border-radius: 15px;
+  transition: all 0.3s ease;
   cursor: pointer;
-  border: none;
+  border: 2px solid transparent;
+  box-shadow: 0 8px 20px rgba(0, 188, 212, 0.4);
 }
 
 .home-button:hover {
-  background-color: #0097a7;
-  transform: scale(1.05);
+  background: linear-gradient(45deg, #00e5ff, #00bcd4);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 229, 255, 0.6);
+  border: 2px solid #00e5ff;
 }
 
-.exit-button {
-  background-color: #a50b62;
+.home-button:nth-child(3), .home-button:nth-child(6) {
+  background: linear-gradient(45deg, #ff4081, #f50057);
 }
 
-.exit-button:hover {
-  background-color: #8d0a56;
+.home-button:nth-child(3):hover, .home-button:nth-child(6):hover {
+  background: linear-gradient(45deg, #ff79b0, #ff4081);
+  box-shadow: 0 15px 30px rgba(255, 64, 129, 0.6);
+  border: 2px solid #ff79b0;
 }

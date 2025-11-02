@@ -1,3 +1,4 @@
+// src/components/Play.jsx
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -10,6 +11,8 @@ import {
   increment,
   serverTimestamp,
 } from "firebase/firestore";
+import confetti from "canvas-confetti";
+import useSound from "use-sound";
 import "./Play.css";
 
 const Play = () => {
@@ -18,11 +21,16 @@ const Play = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [score, setScore] = useState(0);
   const [message, setMessage] = useState("");
-  const [isCorrect, setIsCorrect] = useState(null); // true = correct, false = wrong
-  const [selectedAnswer, setSelectedAnswer] = useState(null); // Track clicked button
+  const [isCorrect, setIsCorrect] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [showBubble, setShowBubble] = useState(false);
+  const [bubbleMsg, setBubbleMsg] = useState("");
   const audioRef = useRef(null);
   const navigate = useNavigate();
+
+  // Sound (optional)
+  const [play] = useSound("/audio.mp3", { volume: 0.5 });
 
   const currentUid = auth.currentUser?.uid;
 
@@ -83,13 +91,11 @@ const Play = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [currentUid]);
 
   const handleAnswer = async (ans) => {
     if (!gameData || selectedAnswer !== null) return;
-
     setSelectedAnswer(ans);
-
     const correct = ans === gameData.solution;
 
     if (correct) {
@@ -97,17 +103,36 @@ const Play = () => {
       setIsCorrect(true);
       setScore((s) => s + 10);
       await addPoints(10);
+
+      // BUBBLE + CONFETTI + SOUND
+      setBubbleMsg("Amazing!");
+      setShowBubble(true);
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ["#27ae60", "#2ecc71", "#ffd700"],
+      });
+      if (!isMuted) play?.();
+
+      setTimeout(() => {
+        setShowBubble(false);
+        setBubbleMsg("");
+        setMessage("");
+        setIsCorrect(null);
+        setSelectedAnswer(null);
+        fetchPuzzle();
+      }, 3000); // 3 seconds
     } else {
       setMessage("Wrong!");
       setIsCorrect(false);
+      setTimeout(() => {
+        setMessage("");
+        setIsCorrect(null);
+        setSelectedAnswer(null);
+        fetchPuzzle();
+      }, 1500);
     }
-
-    setTimeout(() => {
-      setMessage("");
-      setIsCorrect(null);
-      setSelectedAnswer(null);
-      fetchPuzzle();
-    }, 1500);
   };
 
   if (isLoading) return <div className="loading">Loading puzzle...</div>;
@@ -116,7 +141,7 @@ const Play = () => {
     <div className="play-page">
       <audio ref={audioRef} src="/game-music.mp3" loop autoPlay muted={isMuted} />
 
-            {/* Mute Button */}
+              {/* Mute Button */}
       <button className="mute-btn" onClick={() => setIsMuted(!isMuted)}>
         {isMuted ? "🔊 Unmute" : "🔇 Mute"}
       </button>
@@ -129,11 +154,14 @@ const Play = () => {
         </div>
       </div>
 
+      
+
+      {/* Puzzle */}
       <div className="puzzle-container">
         <img src={gameData.question} alt="Math Puzzle" className="puzzle-img" />
       </div>
 
-      {/* HORIZONTAL 0–9 BUTTONS */}
+      {/* Answer Buttons */}
       <div className="answer-row">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
           <button
@@ -151,10 +179,17 @@ const Play = () => {
         ))}
       </div>
 
-      {/* FEEDBACK: GREEN or RED */}
+      {/* Feedback */}
       {message && (
-        <div className={`feedback ${isCorrect ? "correct" : "wrong"}`}>
+        <div className={`feedback ${isCorrect === null ? "" : isCorrect ? "correct" : "wrong"}`}>
           {message}
+        </div>
+      )}
+
+      {/* BUBBLE */}
+      {showBubble && (
+        <div className="bubble">
+          {bubbleMsg}
         </div>
       )}
     </div>
