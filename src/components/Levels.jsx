@@ -1,15 +1,24 @@
 // src/components/Levels.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie'; // ← NEW
 import './Levels.css';
 
 const Levels = () => {
   const navigate = useNavigate();
 
   const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [showResult, setShowResult] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
+    const saved = Cookies.get('quizLevel');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [score, setScore] = useState(() => {
+    const saved = Cookies.get('quizScore');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [showResult, setShowResult] = useState(() => {
+    return Cookies.get('quizCompleted') === 'true';
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -61,6 +70,13 @@ const Levels = () => {
     fetchQuestions();
   }, []);
 
+  // SAVE TO COOKIES ON EVERY CHANGE
+  useEffect(() => {
+    Cookies.set('quizLevel', currentQuestionIndex, { expires: 1});
+    Cookies.set('quizScore', score, { expires: 1});
+    Cookies.set('quizCompleted', showResult, { expires: 1 });
+  }, [currentQuestionIndex, score, showResult]);
+
   const handleAnswerClick = (selectedOption) => {
     if (selectedOption === questions[currentQuestionIndex].answer) {
       setScore(prev => prev + 1);
@@ -75,6 +91,8 @@ const Levels = () => {
   };
 
   const exitToHome = () => {
+    // Optional: Clear cookies on exit
+    // Cookies.remove('quizLevel'); Cookies.remove('quizScore'); Cookies.remove('quizCompleted');
     navigate('/home');
   };
 
@@ -85,6 +103,11 @@ const Levels = () => {
     setLoading(true);
     setError("");
     setQuestions([]);
+    
+    // Clear cookies
+    Cookies.remove('quizLevel');
+    Cookies.remove('quizScore');
+    Cookies.remove('quizCompleted');
 
     setTimeout(() => {
       window.location.reload();
@@ -103,6 +126,11 @@ const Levels = () => {
   return (
     <div className="levels-container">
       <h1>History Quiz</h1>
+
+      {/* SHOW SAVED PROGRESS */}
+      <div style={{ color: '#00d4ff', fontSize: '0.9rem', marginBottom: '10px' }}>
+        {score > 0 && `Saved Score: ${score} | Question: ${currentQuestionIndex + 1}`}
+      </div>
 
       {showResult ? (
         <div className="result">
