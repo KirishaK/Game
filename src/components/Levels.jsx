@@ -1,19 +1,28 @@
 // src/components/Levels.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie'; // ← NEW
 import './Levels.css';
 
 const Levels = () => {
   const navigate = useNavigate();
 
   const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [showResult, setShowResult] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
+    const saved = Cookies.get('quizLevel');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [score, setScore] = useState(() => {
+    const saved = Cookies.get('quizScore');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [showResult, setShowResult] = useState(() => {
+    return Cookies.get('quizCompleted') === 'true';
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Fallback Questions (if API fails)
+  // Fallback Questions
   const fallbackQuestions = [
     {
       question: "Who was the first President of the United States?",
@@ -35,7 +44,6 @@ const Levels = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        // Try API
         const res = await fetch(
           "https://opentdb.com/api.php?amount=10&category=23&type=multiple"
         );
@@ -53,7 +61,6 @@ const Levels = () => {
         }
       } catch (err) {
         console.warn("API failed, using fallback");
-        setError("Using offline questions");
         setQuestions(fallbackQuestions);
       } finally {
         setLoading(false);
@@ -63,9 +70,16 @@ const Levels = () => {
     fetchQuestions();
   }, []);
 
+  // SAVE TO COOKIES ON EVERY CHANGE
+  useEffect(() => {
+    Cookies.set('quizLevel', currentQuestionIndex, { expires: 1});
+    Cookies.set('quizScore', score, { expires: 1});
+    Cookies.set('quizCompleted', showResult, { expires: 1 });
+  }, [currentQuestionIndex, score, showResult]);
+
   const handleAnswerClick = (selectedOption) => {
     if (selectedOption === questions[currentQuestionIndex].answer) {
-      setScore(score + 1);
+      setScore(prev => prev + 1);
     }
 
     const nextIndex = currentQuestionIndex + 1;
@@ -76,15 +90,25 @@ const Levels = () => {
     }
   };
 
-  const exitToHome = () => navigate('/home');
+  const exitToHome = () => {
+    // Optional: Clear cookies on exit
+    // Cookies.remove('quizLevel'); Cookies.remove('quizScore'); Cookies.remove('quizCompleted');
+    navigate('/home');
+  };
+
   const retry = () => {
     setCurrentQuestionIndex(0);
     setScore(0);
     setShowResult(false);
     setLoading(true);
     setError("");
-    // Re-fetch
     setQuestions([]);
+    
+    // Clear cookies
+    Cookies.remove('quizLevel');
+    Cookies.remove('quizScore');
+    Cookies.remove('quizCompleted');
+
     setTimeout(() => {
       window.location.reload();
     }, 100);
@@ -103,7 +127,10 @@ const Levels = () => {
     <div className="levels-container">
       <h1>History Quiz</h1>
 
-     
+      {/* SHOW SAVED PROGRESS */}
+      <div style={{ color: '#00d4ff', fontSize: '0.9rem', marginBottom: '10px' }}>
+        {score > 0 && `Saved Score: ${score} | Question: ${currentQuestionIndex + 1}`}
+      </div>
 
       {showResult ? (
         <div className="result">
