@@ -1,4 +1,4 @@
-// src/components/Leaderboard.jsx
+
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
