@@ -13,7 +13,7 @@ const Levels = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Fallback Questions (if API fails)
+  // Fallback Questions
   const fallbackQuestions = [
     {
       question: "Who was the first President of the United States?",
@@ -35,7 +35,6 @@ const Levels = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        // Try API
         const res = await fetch(
           "https://opentdb.com/api.php?amount=10&category=23&type=multiple"
         );
@@ -53,7 +52,6 @@ const Levels = () => {
         }
       } catch (err) {
         console.warn("API failed, using fallback");
-        setError("Using offline questions");
         setQuestions(fallbackQuestions);
       } finally {
         setLoading(false);
@@ -65,7 +63,7 @@ const Levels = () => {
 
   const handleAnswerClick = (selectedOption) => {
     if (selectedOption === questions[currentQuestionIndex].answer) {
-      setScore(score + 1);
+      setScore(prev => prev + 1);
     }
 
     const nextIndex = currentQuestionIndex + 1;
@@ -76,15 +74,18 @@ const Levels = () => {
     }
   };
 
-  const exitToHome = () => navigate('/home');
+  const exitToHome = () => {
+    navigate('/home');
+  };
+
   const retry = () => {
     setCurrentQuestionIndex(0);
     setScore(0);
     setShowResult(false);
     setLoading(true);
     setError("");
-    // Re-fetch
     setQuestions([]);
+
     setTimeout(() => {
       window.location.reload();
     }, 100);
@@ -102,8 +103,6 @@ const Levels = () => {
   return (
     <div className="levels-container">
       <h1>History Quiz</h1>
-
-     
 
       {showResult ? (
         <div className="result">
